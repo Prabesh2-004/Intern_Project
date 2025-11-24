@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+*{ box-sizing: border-box;}
+
+.active {
+  color: dodgerblue;
+  background: oklch(97% 0.014 254.604);
+}
