@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify'
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import api from '../service/api.js';
@@ -29,11 +30,12 @@ const Login = () => {
             const response = await api.post('/auth/login', formData, {headers: {
                     'Content-Type': 'application/json'
                 }})
-            console.log(response.data.token)
-            setFormData(response.data.token)
+            console.log(response.data)
+            toast.success('Login Successfully');
+            localStorage.setItem('token', response.data.token);
         } catch (error) {
-            console.log(error)
-            setError(error)
+            toast.error('Invalid Credential');
+            setError('Invalid Credential', error)
         }
     }
   return (
@@ -101,7 +103,7 @@ const Login = () => {
             placeholder='Password'
             required
           />
-          {showPassword === 'password' ? <Eye className='w-6 cursor-pointer' onClick={handleShowPassword}/> :  <EyeOff className='w-6 cursor-pointer' onClick={handleShowPassword} />}
+          {showPassword === 'password' ? <Eye className='w-6 cursor-pointer mr-2' onClick={handleShowPassword}/> :  <EyeOff className='w-6 cursor-pointer mr-2' onClick={handleShowPassword} />}
         </div>
         <div className='flex items-center justify-between mb-6'>
           <div className='flex items-center gap-1'>
@@ -125,6 +127,18 @@ const Login = () => {
           </Link>
         </p>
       </form>
+      <ToastContainer
+        position='top-right'
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='light'
+      />
     </div>
   );
 };

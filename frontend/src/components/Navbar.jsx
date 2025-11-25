@@ -4,13 +4,14 @@ import { Link, NavLink } from 'react-router-dom';
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   return (
-    <nav className='flex items-center max-w-screen w-full justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white fixed transition-all'>
+    <nav className='flex z-10 items-center max-w-screen w-full justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-[#faeab4] fixed transition-all'>
       <h2 className='font-bold text-xl'>ShopNexa</h2>
 
       {/* Desktop Menu */}
       <div className='hidden sm:flex items-center gap-8'>
         <NavLink to='/'>Home</NavLink>
-        <NavLink to='/product'>Product</NavLink>
+        <NavLink to='/product'>Shop</NavLink>
+        <NavLink to='/about'>About</NavLink>
         <NavLink to='/contact'>Contact</NavLink>
 
         <div className='hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full'>
