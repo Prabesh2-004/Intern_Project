@@ -1,18 +1,11 @@
-// src/App.jsx
-import { CartProvider } from './context/CartContext';
-import ProductList from './components/ProductList';
-import Cart from './components/Cart';
+import React from 'react'
 
-function App() {
+const App = () => {
   return (
-    <CartProvider>
-      <div className="App">
-        <h1>My E-commerce Store</h1>
-        <ProductList />
-        <Cart />
-      </div>
-    </CartProvider>
-  );
+    <div>
+      App
+    </div>
+  )
 }
 
-export default App;
+export default App

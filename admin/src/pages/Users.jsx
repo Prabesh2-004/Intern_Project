@@ -9,11 +9,14 @@ import {
 } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Confirm from '../components/Confirm.jsx';
 
 const Users = () => {
   const [user, setUser] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [confirm, setConfirm] = useState(null);
+  const [showDialog, setShowDialog] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -31,16 +34,8 @@ const Users = () => {
   }, []);
 
   const handleDelete = async (_id) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      try {
-        await api.delete(`/auth/${_id}`);
-        setUser((user) => user.filter((item) => item._id !== _id));
-        toast.success('User deleted successfully!');
-      } catch (error) {
-        console.log(error);
-        toast.error('Failed to delete user');
-      }
-    }
+      setShowDialog(true)
+      setConfirm(_id);
   };
 
   const handleNotify = (username) => {
@@ -186,6 +181,7 @@ const Users = () => {
         pauseOnHover
         theme='light'
       />
+      {showDialog ? <Confirm confirm={confirm} setShowDialog={setShowDialog} setUser={setUser} /> : ''}
     </div>
   );
 };

@@ -1,6 +1,19 @@
 import React from 'react';
+import api from '../services/api.js';
+import { toast } from 'react-toastify';
 
-const Confirm = () => {
+const Confirm = ({ setShowDialog, confirm, setUser }) => {
+  const handleDelete = async (_id) => {
+    try {
+      await api.delete(`/auth/${_id}`);
+      setUser((user) => user.filter((item) => item._id !== _id));
+      toast.success('User deleted successfully!');
+    } catch (error) {
+      console.log(error);
+      toast.error('Failed to delete user');
+    }
+    setShowDialog(false)
+  };
   return (
     <div className='absolute z-20 top-48 right-96'>
       <div className='flex flex-col items-center bg-white shadow-md rounded-xl py-6 px-5 md:w-[460px] w-[370px] border border-gray-200'>
@@ -32,12 +45,14 @@ const Confirm = () => {
         <div className='flex items-center justify-center gap-4 mt-5 w-full'>
           <button
             type='button'
+            onClick={() => setShowDialog(false)}
             className='w-full md:w-36 h-10 rounded-md border border-gray-300 bg-white text-gray-600 font-medium text-sm hover:bg-gray-100 active:scale-95 transition'
           >
             Cancel
           </button>
           <button
             type='button'
+            onClick={() => handleDelete(confirm)}
             className='w-full md:w-36 h-10 rounded-md text-white bg-red-600 font-medium text-sm hover:bg-red-700 active:scale-95 transition'
           >
             Confirm
