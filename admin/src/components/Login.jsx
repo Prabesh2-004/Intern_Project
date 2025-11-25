@@ -17,7 +17,6 @@ const Login = ({ setToken }) => {
             const response = await api.post('/auth/admin', formData, {headers: {
                     'Content-Type': 'application/json'
                 }})
-            console.log(response.data)
             setToken(response.data.token)
         } catch (error) {
             console.log(error)
