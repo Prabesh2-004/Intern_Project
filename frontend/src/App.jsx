@@ -7,19 +7,22 @@ import Register from './pages/Register'
 import Product from './pages/Product'
 import Contact from './pages/Contact'
 import About from './pages/About'
+import ProductDetails from './pages/ProductDetails'
 
 const App = () => {
   const [token, setToken] = useState(
     localStorage.getItem('token') ? localStorage.getItem('token') : ''
   )
+  const [pid, setPid] = useState('')
   return (
-    <Layout setToken={setToken}>
+    <Layout setToken={setToken} pid={pid}>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
         <Route path='/login' element={token ? <Navigate to='/' /> : <Login />} />
         <Route path='/register' element={token ? <Navigate to='/' /> : <Register />} />
         <Route path='/product' element={<Product />} />
+        <Route path='/product/:id' element={<ProductDetails setPid={setPid} />} />
         <Route path='/contact' element={<Contact />} />
       </Routes>
     </Layout>
