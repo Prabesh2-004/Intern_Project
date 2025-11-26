@@ -1,10 +1,28 @@
-import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
+  const location = useLocation();
   const [open, setOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const navColor = !'/'.includes(location.pathname);
+
+  useEffect(() => {
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   return (
-    <nav className='flex z-10 items-center max-w-screen w-full justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-[#faeab4] fixed transition-all'>
+    <nav
+      className={`flex z-100 items-center max-w-screen ${navColor && 'bg-[white]'} w-full justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 ${
+        isScrolled ? 'bg-white' : 'bg-[#faeab4]'
+      } fixed transition-all`}
+    >
       <h2 className='font-bold text-xl'>ShopNexa</h2>
 
       {/* Desktop Menu */}
@@ -65,7 +83,10 @@ const Navbar = () => {
           </button>
         </div>
 
-        <Link to='/login' className='cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full'>
+        <Link
+          to='/login'
+          className='cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full'
+        >
           Login
         </Link>
       </div>
@@ -120,7 +141,7 @@ const Navbar = () => {
         <div
           className={`${
             open ? 'flex' : 'hidden'
-          } absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden`}
+          } absolute top-[60px] left-0 w-full bg-[#faeab4] shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden`}
         >
           <NavLink to='/' className='block'>
             Home
@@ -131,7 +152,10 @@ const Navbar = () => {
           <NavLink to='/contact' className='block'>
             Contact
           </NavLink>
-          <Link to='/login' className='cursor-pointer px-6 py-2 mt-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full text-sm'>
+          <Link
+            to='/login'
+            className='cursor-pointer px-6 py-2 mt-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full text-sm'
+          >
             Login
           </Link>
         </div>

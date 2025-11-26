@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api.js';
 import { BellRing, Mail, Search, ShoppingCart, Trash2 } from 'lucide-react';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 const List = () => {
   const [product, setProduct] = useState([]);
@@ -23,6 +23,7 @@ const List = () => {
     try {
       await api.delete(`/product/${_id}`)
       setProduct(product => product.filter(item => item._id !== _id))
+      toast.success('Product Deleted successfully!');
     } catch (error) {
       console.log(error)
     }
