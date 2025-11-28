@@ -1,46 +1,58 @@
 import React, { useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import api from '../service/api.js';
 
-const Login = () => {
-    const [showPassword, setShowPassword] = useState('password')
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
-    const [error, setError] = useState('')
+const Login = ({ setUser }) => {
+  const [showPassword, setShowPassword] = useState('password');
+  // const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  const [error, setError] = useState('');
 
-    const handleShowPassword = () => {
-        if(showPassword === 'password'){
-            setShowPassword('text')
-        }else{
-            setShowPassword('password')
-        }
+  const handleShowPassword = () => {
+    if (showPassword === 'password') {
+      setShowPassword('text');
+    } else {
+      setShowPassword('password');
     }
+  };
 
-    const handleChange = (e) => {
-        setFormData({...formData, [e.target.name]: e.target.value})
-    }
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await api.post('/auth/login', formData, {headers: {
-                    'Content-Type': 'application/json'
-                }})
-            console.log(response.data)
-            toast.success('Login Successfully');
-            localStorage.setItem('token', response.data.token);
-        } catch (error) {
-            toast.error('Invalid Credential');
-            setError('Invalid Credential', error)
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await api.post('/auth/login', formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      setUser(response.data.user);
+      toast.success('Login Successfully');
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      if (response.data.success) {
+        window.location.reload()
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      console.error('Error response:', error.response);
+      toast.error('Invalid Credential');
+      setError('Invalid Credential', error);
     }
+  };
   return (
     <div className='flex justify-center items-center h-screen'>
-      <form onSubmit={handleSubmit} className='bg-white text-gray-500 max-w-[340px] w-full mx-4 md:p-6 p-4 py-8 text-left text-sm rounded-xl shadow-[0px_0px_10px_0px] shadow-black/10'>
+      <form
+        onSubmit={handleSubmit}
+        className='bg-white text-gray-500 max-w-[340px] w-full mx-4 md:p-6 p-4 py-8 text-left text-sm rounded-xl shadow-[0px_0px_10px_0px] shadow-black/10'
+      >
         <h2 className='text-2xl font-bold mb-9 text-center text-gray-800'>
           Welcome Back
         </h2>
@@ -103,7 +115,17 @@ const Login = () => {
             placeholder='Password'
             required
           />
-          {showPassword === 'password' ? <Eye className='w-6 cursor-pointer mr-2' onClick={handleShowPassword}/> :  <EyeOff className='w-6 cursor-pointer mr-2' onClick={handleShowPassword} />}
+          {showPassword === 'password' ? (
+            <Eye
+              className='w-6 cursor-pointer mr-2'
+              onClick={handleShowPassword}
+            />
+          ) : (
+            <EyeOff
+              className='w-6 cursor-pointer mr-2'
+              onClick={handleShowPassword}
+            />
+          )}
         </div>
         <div className='flex items-center justify-between mb-6'>
           <div className='flex items-center gap-1'>

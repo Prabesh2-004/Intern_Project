@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
-    <div className='md:pt-18 pt-14 '>
+    <div className='md:pt-14 pt-14 '>
       <div className='flex flex-col md:flex-row px-20 bg-[#faeab4] items-center justify-between md:h-screen h-auto'>
         <div className='flex flex-col gap-16'>
           <p className='text-8xl'>Sherpa Multi seater</p>

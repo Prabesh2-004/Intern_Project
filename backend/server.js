@@ -5,6 +5,7 @@ import connectDB from './config/db.js';
 import authRouter from './routes/auth.route.js'
 import productRouter from './routes/product.route.js'
 import connectCloudinary from './config/cloudinary.js';
+import router from './routes/contact.route.js';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(cors({
 
 app.use('/api/auth', authRouter)
 app.use('/api/product', productRouter)
+app.use('/api/contact', router)
 
 
 const PORT = process.env.PORT || 5000;

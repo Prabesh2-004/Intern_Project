@@ -111,7 +111,7 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const updateQuantity = async (productId, color, quantity) => {
+  const updateColor = async (productId, color, quantity) => {
     const cartKey = `${productId}_${color}`;
 
     if (isAuthenticated) {
@@ -135,7 +135,7 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const removeFromCart = async (productId, color) => {
+ const removeFromCart = async (productId, color) => {
     if (isAuthenticated) {
       try {
         const response = await api.post('/product/cart/remove', { productId, color });
@@ -213,7 +213,7 @@ export const CartProvider = ({ children }) => {
   const value = {
     cartData,
     addToCart,
-    updateQuantity,
+    updateColor,
     removeFromCart,
     clearCart,
     getTotalItems,

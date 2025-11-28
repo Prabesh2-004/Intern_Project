@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import Home from './pages/Home';
@@ -9,21 +9,49 @@ import Contact from './pages/Contact';
 import About from './pages/About';
 import ProductDetails from './pages/ProductDetails';
 import { CartProvider } from './context/cartContext';
+import api from './service/api';
+import Cart from './pages/Cart';
 
 const App = () => {
+  const [user, setUser] = useState(null);
   const [token, setToken] = useState(
     localStorage.getItem('token') ? localStorage.getItem('token') : ''
   );
   const [pid, setPid] = useState('');
+
+  const fetchUser = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+
+    const response = await api.get('/auth/me');
+    
+    return response.data.user;
+  } catch (error) {
+    console.error('Failed to fetch user data:', error);
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    return null;
+  }
+};
+
+  useEffect(() => {
+    const initializeUser = async () => {
+      const userData = await fetchUser();
+      setUser(userData)
+    }
+    initializeUser()
+  }, [])
+
   return (
     <CartProvider>
-      <Layout setToken={setToken} token={token} pid={pid}>
+      <Layout setToken={setToken} user={user} token={token} pid={pid}>
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/about' element={<About />} />
           <Route
             path='/login'
-            element={token ? <Navigate to='/' /> : <Login />}
+            element={token ? <Navigate to='/' /> : <Login setUser={setUser} />}
           />
           <Route
             path='/register'
@@ -35,6 +63,7 @@ const App = () => {
             element={<ProductDetails setPid={setPid} />}
           />
           <Route path='/contact' element={<Contact />} />
+          <Route path='/cart' element={<Cart />} />
         </Routes>
       </Layout>
     </CartProvider>

@@ -3,7 +3,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import { useLocation } from 'react-router-dom';
 
-const Layout = ({ children, pid, token }) => {
+const Layout = ({ children, pid, token, setToken, user }) => {
   const location = useLocation();
   const hideNavbarRoutes = [
     '/login',
@@ -16,7 +16,7 @@ const Layout = ({ children, pid, token }) => {
   const showNavbar = !hideNavbarRoutes.includes(location.pathname);
   return (
     <>
-      <Navbar token={token} />
+      <Navbar token={token} user={user} setToken={setToken}/>
       <div ref={scrollRef}>
         {children}
         {showNavbar && <Footer />}

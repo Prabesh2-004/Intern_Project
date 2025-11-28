@@ -10,14 +10,13 @@ const ProductDetails = ({ setPid }) => {
   const [loadProduct, setLoadProduct] = useState(null);
   const [thumbnail, setThumbnail] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [colors, setColors] = useState([]);
+  const [colors, setColors] = useState(null);
   const [colorError, setColorError] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await api.get(`/product/${id}`);
-        console.log(response.data.product);
         setLoadProduct(response.data.product);
         setPid(id);
       } catch (error) {
@@ -138,8 +137,8 @@ const ProductDetails = ({ setPid }) => {
                     {color}
                   </button>
                 ))}
-                {colorError}
               </div>
+                <p className='text-red-500 mt-5'>{colorError}</p>
             </div>
 
             <div className='flex items-center mt-10 gap-4 text-base'>
@@ -156,6 +155,18 @@ const ProductDetails = ({ setPid }) => {
           </div>
         </div>
       </div>
+      <ToastContainer
+        position='top-right'
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='light'
+      />
     </div>
   );
 };

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useCart } from '../context/cartContext.jsx';
 
-const Navbar = ({ token }) => {
+const Navbar = ({ token, setToken, user }) => {
+  const { getTotalItems } = useCart();
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const navColor = !'/'.includes(location.pathname);
 
   useEffect(() => {
-
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
@@ -17,9 +19,16 @@ const Navbar = ({ token }) => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setToken('');
+  };
   return (
     <nav
-      className={`flex z-100 items-center max-w-screen ${navColor && 'bg-[white]'} w-full justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 ${
+      className={`flex z-100 items-center max-w-screen ${
+        navColor && 'bg-[white]'
+      } w-full justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 ${
         isScrolled ? 'bg-white' : 'bg-[#faeab4]'
       } fixed transition-all`}
     >
@@ -64,31 +73,71 @@ const Navbar = ({ token }) => {
         </div>
 
         <div className='relative cursor-pointer'>
-          <svg
-            width='18'
-            height='18'
-            viewBox='0 0 14 14'
-            fill='none'
-            xmlns='http://www.w3.org/2000/svg'
-          >
-            <path
-              d='M.583.583h2.333l1.564 7.81a1.17 1.17 0 0 0 1.166.94h5.67a1.17 1.17 0 0 0 1.167-.94l.933-4.893H3.5m2.333 8.75a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0m6.417 0a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0'
-              stroke='#615fff'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            />
-          </svg>
-          <button className='absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full'>
-            
-          </button>
+          <Link to='/cart'>
+            <svg
+              width='18'
+              height='18'
+              viewBox='0 0 14 14'
+              fill='none'
+              xmlns='http://www.w3.org/2000/svg'
+            >
+              <path
+                d='M.583.583h2.333l1.564 7.81a1.17 1.17 0 0 0 1.166.94h5.67a1.17 1.17 0 0 0 1.167-.94l.933-4.893H3.5m2.333 8.75a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0m6.417 0a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0'
+                stroke='#615fff'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+            </svg>
+            <button className='absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full'>{getTotalItems()}</button>
+          </Link>
         </div>
-        {token ? '' : <Link
-          to='/login'
-          className='cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full'
-        >
-          Login
-        </Link>}
-        
+        {token ? (
+          <div className='flex flex-col w-32 text-sm'>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className=' w-10 text-center border rounded-full bg-white text-gray-700 border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none'
+            >
+              <img
+                src='https://i.pinimg.com/1200x/36/08/df/3608dfbe54dc01fbd04550841f3fbbd8.jpg'
+                alt='profile'
+                className='w-10 h-10 rounded-full'
+              />
+            </button>
+
+            {isOpen ? (
+              <ul className=' overflow-hidden absolute right-24 top-14 peer-focus:block w-40 bg-white border border-gray-300 rounded shadow-md mt-2 py-1'>
+                <li className='px-4 py-2 text-black hover:bg-gray-500/10'>
+                  {user?.username}
+                </li>{' '}
+                <hr />
+                <li className='px-4 py-2 hover:bg-gray-500/10 cursor-pointer'>
+                  Profile
+                </li>
+                <li className='px-4 py-2 hover:bg-gray-500/10 cursor-pointer'>
+                  My Order
+                </li>
+                <li className='px-4 py-2 hover:bg-gray-500/10 cursor-pointer'>
+                  Setting
+                </li>
+                <li
+                  onClick={handleLogout}
+                  className='px-4 py-2 hover:bg-red-500/10 text-red-500 cursor-pointer'
+                >
+                  Logout
+                </li>
+              </ul>
+            ) : (
+              ''
+            )}
+          </div>
+        ) : (
+          <Link
+            to='/login'
+            className='cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full'
+          >
+            Login
+          </Link>
+        )}
       </div>
       <div className='sm:hidden flex gap-10'>
         <div className='relative sm:hidden  cursor-pointer'>
@@ -106,9 +155,7 @@ const Navbar = ({ token }) => {
               strokeLinejoin='round'
             />
           </svg>
-          <button className='absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full'>
-            
-          </button>
+          <button className='absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full'></button>
         </div>
 
         <button

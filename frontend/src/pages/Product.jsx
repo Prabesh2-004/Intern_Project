@@ -33,7 +33,7 @@ const Product = () => {
             alt='img1'
           />
         </div>
-        <p className='text-sm mt-2'>White crew-Neck T-Shirt</p>
+        <p className='text-sm mt-2'>{items.name}</p>
         <p className='text-xl mt-2'>Rs {items.price}</p>
         <div className='flex justify-between mt-3 items-center'>
           <button onClick={() => handleAddToCart(items._id)} className='py-2 px-5 border border-gray-300 cursor-pointer'>Add To Cart</button>
