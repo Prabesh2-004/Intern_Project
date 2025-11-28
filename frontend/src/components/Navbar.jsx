@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 
-const Navbar = () => {
+const Navbar = ({ token }) => {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -79,16 +79,16 @@ const Navbar = () => {
             />
           </svg>
           <button className='absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full'>
-            3
+            
           </button>
         </div>
-
-        <Link
+        {token ? '' : <Link
           to='/login'
           className='cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full'
         >
           Login
-        </Link>
+        </Link>}
+        
       </div>
       <div className='sm:hidden flex gap-10'>
         <div className='relative sm:hidden  cursor-pointer'>
@@ -107,7 +107,7 @@ const Navbar = () => {
             />
           </svg>
           <button className='absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full'>
-            3
+            
           </button>
         </div>
 

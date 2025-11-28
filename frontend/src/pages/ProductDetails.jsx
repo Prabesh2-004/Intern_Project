@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../service/api.js';
+import { toast, ToastContainer } from 'react-toastify';
+import { useCart } from '../context/cartContext.jsx';
 
 const ProductDetails = ({ setPid }) => {
   const { id } = useParams();
+  const { addToCart } = useCart();
   const [loadProduct, setLoadProduct] = useState(null);
   const [thumbnail, setThumbnail] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [colors, setColors] = useState([]);
+  const [colorError, setColorError] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,8 +27,25 @@ const ProductDetails = ({ setPid }) => {
     fetchData();
   }, [id]);
 
+  const handleAddToCart = async () => {
+    if (!colors) {
+      setColorError('Please select a size');
+      return;
+    }
+
+    for (let i = 0; i < quantity; i++) {
+      await addToCart(loadProduct._id, colors);
+    }
+
+    toast.success('Product Added to cart');
+
+    setColors(null);
+    setQuantity(1);
+  };
+
   const handleColorChange = (color) => {
     setColors(color);
+    setColorError('');
   };
 
   const handleQuantityChange = (change) => {
@@ -104,7 +125,7 @@ const ProductDetails = ({ setPid }) => {
               </div>
             </div>
             <div>
-                <p>Select Colors: </p>
+              <p>Select Colors: </p>
               <div className='flex gap-5 mt-2'>
                 {loadProduct?.colors?.map((color) => (
                   <button
@@ -117,11 +138,15 @@ const ProductDetails = ({ setPid }) => {
                     {color}
                   </button>
                 ))}
+                {colorError}
               </div>
             </div>
 
             <div className='flex items-center mt-10 gap-4 text-base'>
-              <button className='w-full py-3.5 cursor-pointer font-medium bg-gray-100 text-gray-800/80 hover:bg-gray-200 transition'>
+              <button
+                onClick={handleAddToCart}
+                className='w-full py-3.5 cursor-pointer font-medium bg-gray-100 text-gray-800/80 hover:bg-gray-200 transition'
+              >
                 Add to Cart
               </button>
               <button className='w-full py-3.5 cursor-pointer font-medium bg-indigo-500 text-white hover:bg-indigo-600 transition'>

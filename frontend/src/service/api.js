@@ -5,7 +5,7 @@ const backendUrl = 'http://localhost:5000';
 export const api = axios.create({
     baseURL: backendUrl+'/api',
     headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'application/json'
     }
 })
 
