@@ -8,7 +8,7 @@ const PlaceOrder = ({ user }) => {
   const { getTotalPrice, getCartItems, clearCart } = useCart();
   const [form, setForm] = useState({
     fullName: '',
-    email: '',
+    email: `${user?.email}`,
     phone: '',
     address: '',
     city: '',
@@ -88,6 +88,7 @@ const PlaceOrder = ({ user }) => {
               placeholder='Email'
               className='w-full p-3 border rounded'
               required
+              disabled
             />
             <input
               name='phone'

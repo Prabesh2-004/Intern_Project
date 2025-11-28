@@ -13,7 +13,7 @@ export const protect = async (req, res, next) => {
     }
 
     if(!token) {
-        res.status(400).json({success: false, message: 'Token Failed, Not Authorized'})
+        return res.status(400).json({success: false, message: 'Token Failed, Not Authorized'})
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -25,7 +25,7 @@ export const protect = async (req, res, next) => {
             message: 'Invalid token structure'
         });
     }
-    
+
     req.user = { id: userID, _id: userID};
 
     next();

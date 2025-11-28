@@ -10,10 +10,8 @@ export default function AdminOrders() {
     try {
       setLoading(true);
       setError(null);
-      console.log('Fetching orders from: /orders/list');
 
       const response = await api.get('/orders/list');
-      console.log('Response:', response.data);
 
       if (response.data.success) {
         setOrders(response.data.orders);

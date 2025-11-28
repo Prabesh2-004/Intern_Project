@@ -88,7 +88,9 @@ const Navbar = ({ token, setToken, user }) => {
                 strokeLinejoin='round'
               />
             </svg>
-            <button className='absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full'>{getTotalItems()}</button>
+            <button className='absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full'>
+              {getTotalItems()}
+            </button>
           </Link>
         </div>
         {token ? (
@@ -114,7 +116,7 @@ const Navbar = ({ token, setToken, user }) => {
                   Profile
                 </li>
                 <li className='px-4 py-2 hover:bg-gray-500/10 cursor-pointer'>
-                  My Order
+                  <Link to='/user-order'>My Order</Link>
                 </li>
                 <li className='px-4 py-2 hover:bg-gray-500/10 cursor-pointer'>
                   Setting
