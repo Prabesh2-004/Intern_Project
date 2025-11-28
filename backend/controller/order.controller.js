@@ -6,7 +6,7 @@ import userModel from '../model/user.model.js';
 export const placeOrder = async (req, res) => {
   try {
     const { items, amount, address, paymentMethod } = req.body;
-
+    
     if (!items || items.length === 0) {
       return res.status(400).json({ success: false, message: 'Cart is empty' });
     }
@@ -20,7 +20,7 @@ export const placeOrder = async (req, res) => {
       address,
       paymentMethod: paymentMethod || 'COD',
       payment: paymentMethod === 'card',
-      status: 'Order Placed',
+      status: 'Order Placed'
     };
 
     const newOrder = new orderModel(orderData);
@@ -28,11 +28,12 @@ export const placeOrder = async (req, res) => {
 
     await userModel.findByIdAndUpdate(userId, { cartData: {} });
 
-    res.json({
-      success: true,
+    res.json({ 
+      success: true, 
       message: 'Order placed successfully!',
-      orderId: newOrder._id,
+      orderId: newOrder._id 
     });
+
   } catch (error) {
     console.error('Order placement error:', error);
     res.status(500).json({ success: false, message: 'Order placement failed' });
@@ -42,8 +43,7 @@ export const placeOrder = async (req, res) => {
 // Get all orders (Admin)
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await orderModel
-      .find({})
+    const orders = await orderModel.find({})
       .populate('userId', 'username email avatar')
       .sort({ date: -1 });
 
@@ -67,19 +67,15 @@ export const updateOrderStatus = async (req, res) => {
       'Shipped',
       'Out for Delivery',
       'Delivered',
-      'Cancelled',
+      'Cancelled'
     ];
 
     if (!orderId || !status) {
-      return res
-        .status(400)
-        .json({ success: false, message: 'Order ID and status required' });
+      return res.status(400).json({ success: false, message: 'Order ID and status required' });
     }
 
     if (!validStatuses.includes(status)) {
-      return res
-        .status(400)
-        .json({ success: false, message: 'Invalid status' });
+      return res.status(400).json({ success: false, message: 'Invalid status' });
     }
 
     const updatedOrder = await orderModel.findByIdAndUpdate(
@@ -89,34 +85,21 @@ export const updateOrderStatus = async (req, res) => {
     );
 
     if (!updatedOrder) {
-      return res
-        .status(404)
-        .json({ success: false, message: 'Order not found' });
+      return res.status(404).json({ success: false, message: 'Order not found' });
     }
 
-    res.json({
-      success: true,
-      message: 'Order status updated',
-      order: updatedOrder,
-    });
+    res.json({ success: true, message: 'Order status updated', order: updatedOrder });
   } catch (error) {
     console.error('Update order error:', error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: 'Failed to update order',
-        error: error.message,
-      });
+    res.status(500).json({ success: false, message: 'Failed to update order', error: error.message });
   }
 };
 
 // Get user's orders (User)
 export const getUserOrders = async (req, res) => {
   try {
-    const orders = await orderModel
-      .find({ userId: req.user.id })
-      .sort({ date: -1 }); // or createdAt if using timestamps
+    const orders = await orderModel.find({ userId: req.user.id })
+      .sort({ date: -1 });
 
     res.json({ success: true, orders });
   } catch (error) {
@@ -133,9 +116,7 @@ export const cancelOrder = async (req, res) => {
     const order = await orderModel.findById(orderId);
 
     if (!order) {
-      return res
-        .status(404)
-        .json({ success: false, message: 'Order not found' });
+      return res.status(404).json({ success: false, message: 'Order not found' });
     }
 
     if (order.userId.toString() !== req.user.id.toString()) {
@@ -143,9 +124,9 @@ export const cancelOrder = async (req, res) => {
     }
 
     if (['Shipped', 'Out for Delivery', 'Delivered'].includes(order.status)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Cannot cancel shipped orders',
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Cannot cancel shipped orders' 
       });
     }
 
@@ -153,6 +134,7 @@ export const cancelOrder = async (req, res) => {
     await order.save();
 
     res.json({ success: true, message: 'Order cancelled successfully' });
+
   } catch (error) {
     console.error('Cancel order error:', error);
     res.status(500).json({ success: false, message: 'Failed to cancel order' });

@@ -1,5 +1,6 @@
 // components/UserOrders.jsx
 import React, { useState, useEffect } from 'react';
+import api from '../service/api';
 
 const UserOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -11,15 +12,10 @@ const UserOrders = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/orders/userorders', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      const data = await res.json();
+      const response = await api.get('/orders/user-orders');
       
-      if (data.success) {
-        setOrders(data.orders);
+      if (response.data.success) {
+        setOrders(response.data.orders);
       }
     } catch (error) {
       console.error('Error fetching orders:', error);
@@ -32,22 +28,14 @@ const UserOrders = () => {
     if (!window.confirm('Are you sure you want to cancel this order?')) return;
 
     try {
-      const res = await fetch('http://localhost:5000/api/orders/cancel', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({ orderId }),
-      });
+      const response = await api.post('/orders/cancel', {orderId});
 
-      const data = await res.json();
 
-      if (data.success) {
+      if (response.data.success) {
         alert('Order cancelled successfully!');
         fetchOrders();
       } else {
-        alert(data.message);
+        alert(response.data.message);
       }
     } catch (error) {
       console.error('Error cancelling order:', error);
