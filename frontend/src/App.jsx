@@ -7,10 +7,12 @@ import Register from './pages/Register';
 import Product from './pages/Product';
 import Contact from './pages/Contact';
 import About from './pages/About';
+import OrderPage from './pages/OrderPage';
 import ProductDetails from './pages/ProductDetails';
 import { CartProvider } from './context/cartContext';
 import api from './service/api';
 import Cart from './pages/Cart';
+import UserOrders from './pages/Order';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -64,6 +66,8 @@ const App = () => {
           />
           <Route path='/contact' element={<Contact />} />
           <Route path='/cart' element={<Cart />} />
+          <Route path='/place-order' element={<OrderPage user={user} />} />
+          <Route path='/user-order' element={<UserOrders />} />
         </Routes>
       </Layout>
     </CartProvider>

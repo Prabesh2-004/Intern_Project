@@ -4,7 +4,12 @@ const adminLogin = (req,res) => {
     try {
         const { email, password } = req.body;
          if(email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-            const token = jwt.sign(email+password, process.env.JWT_SECRET)
+            const payload = {
+                email: email,
+                password: password,
+                role: 'admin'
+            }
+            const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '7d'})
             res.status(200).json({message:  'Logged in Successfully', success: true, token})
          }else{ 
             res.status(400).json({message: 'Invalid Credential', success: false})

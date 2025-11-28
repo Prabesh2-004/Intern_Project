@@ -18,6 +18,14 @@ export const protect = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userID = decoded?.user?.id || decoded?.id || decoded;
+
+    if (!userID) {
+        return res.status(401).json({
+            success: false,
+            message: 'Invalid token structure'
+        });
+    }
+    
     req.user = { id: userID, _id: userID};
 
     next();

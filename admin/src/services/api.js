@@ -1,24 +1,25 @@
-import axios from "axios";
+import axios from 'axios';
 
 const backendUrl = 'http://localhost:5000';
 
 export const api = axios.create({
-    baseURL: backendUrl+'/api',
-    headers: {
-        'Content-Type': 'multipart/form-data'
-    }
-})
+  baseURL: backendUrl + '/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-api.interceptors.request.use(config => {
+api.interceptors.request.use(
+  (config) => {
     const token = localStorage.getItem('token');
-    if(token) {
-        config.headers['auth-token'] = token;
-        config.headers['Authorization'] = `Bearer ${token}`
+    if (token) {
+      config.headers['auth-token'] = token;
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
-    return config
-},
-(error) => Promise.reject(error)
-)
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 api.interceptors.response.use(
   (response) => response,
