@@ -100,7 +100,7 @@ const Navbar = ({ token, setToken, user }) => {
               className=' w-10 text-center border rounded-full bg-white text-gray-700 border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none'
             >
               <img
-                src='https://i.pinimg.com/1200x/36/08/df/3608dfbe54dc01fbd04550841f3fbbd8.jpg'
+                src={user?.avatar}
                 alt='profile'
                 className='w-10 h-10 rounded-full'
               />

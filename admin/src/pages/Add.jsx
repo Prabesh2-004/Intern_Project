@@ -60,10 +60,10 @@ const ImageUploadBox = ({ image, setImage, inputId, imageNumber, removeImage }) 
 
 
 const Add = () => {
-  const [image1, setImage1] = useState(false);
-  const [image2, setImage2] = useState(false);
-  const [image3, setImage3] = useState(false);
-  const [image4, setImage4] = useState(false);
+  const [image1, setImage1] = useState(null);
+const [image2, setImage2] = useState(null);
+const [image3, setImage3] = useState(null);
+const [image4, setImage4] = useState(null);
   const [details, setDetails] = useState({
     name: '',
     description: '',
@@ -78,71 +78,70 @@ const Add = () => {
     setDetails({ ...details, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    try {
-      const formData = new FormData();
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError(null);
+  
+  // Validation
+  if (!details.name || !details.description || !details.price || !category) {
+    setError('Please fill in all required fields');
+    toast.error('Please fill in all required fields');
+    return;
+  }
 
-      formData.append('name', details.name);
-      formData.append('description', details.description);
-      formData.append('price', details.price);
-      formData.append('category', category);
-      sizes.forEach((sizes) => formData.append('sizes[]', sizes));
-      colors.forEach((colors) => formData.append('colors[]', colors));
+  try {
+    const formData = new FormData();
 
-      image1 && formData.append('image1', image1);
-      image2 && formData.append('image2', image2);
-      image3 && formData.append('image3', image3);
-      image4 && formData.append('image4', image4);
-
-      const response = await api.post('/product/create', formData);
-
-      if (response.data.success) {
-        toast.success('Product Added successfully!');
-        setDetails({
-          name: '',
-          description: '',
-          price: '',
-        });
-        setImage1(false);
-        setImage2(false);
-        setImage3(false);
-        setImage4(false);
-      }
-    } catch (error) {
-      console.log(error);
-      console.error('Error response:', error.response?.data);
-      setError(error.response?.data?.message || 'Failed to add product');
+    formData.append('name', details.name);
+    formData.append('description', details.description);
+    formData.append('price', details.price);
+    formData.append('category', category);
+    
+    // Append arrays correctly
+    if (sizes.length > 0) {
+      sizes.forEach((size) => formData.append('sizes[]', size));
     }
-  };
+    
+    if (colors.length > 0) {
+      colors.forEach((color) => formData.append('colors[]', color));
+    }
 
-  // if (loading) {
-  //   return (
-  //     <button
-  //       type='button'
-  //       className='inline-flex items-center text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none'
-  //     >
-  //       <svg
-  //         aria-hidden='true'
-  //         className='w-4 h-4 text-neutral-tertiary animate-spin fill-brand me-2'
-  //         viewBox='0 0 100 101'
-  //         fill='none'
-  //         xmlns='http://www.w3.org/2000/svg'
-  //       >
-  //         <path
-  //           d='M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z'
-  //           fill='currentColor'
-  //         />
-  //         <path
-  //           d='M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z'
-  //           fill='currentFill'
-  //         />
-  //       </svg>
-  //       Loading...
-  //     </button>
-  //   );
-  // }
+    // Only append images that exist
+    if (image1) formData.append('image1', image1);
+    if (image2) formData.append('image2', image2);
+    if (image3) formData.append('image3', image3);
+    if (image4) formData.append('image4', image4);
+
+    const response = await api.post('/product/create', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    if (response.data.success) {
+      toast.success('Product Added successfully!');
+      // Reset form
+      setDetails({
+        name: '',
+        description: '',
+        price: '',
+      });
+      setCategory('');
+      setSizes([]);
+      setColors([]);
+      setImage1(false);
+      setImage2(false);
+      setImage3(false);
+      setImage4(false);
+    }
+  } catch (error) {
+    console.error('Error adding product:', error);
+    const errorMessage = error.response?.data?.message || 'Failed to add product';
+    setError(errorMessage);
+    toast.error(errorMessage);
+  }
+};
+
 
   const removeImage = (imageNumber) => {
     switch (imageNumber) {

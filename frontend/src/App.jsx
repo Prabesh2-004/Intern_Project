@@ -67,7 +67,7 @@ const App = () => {
           <Route path='/contact' element={<Contact />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/place-order' element={<OrderPage user={user} />} />
-          <Route path='/user-order' element={user ? <UserOrders /> : <Navigate to='/' />} />
+          <Route path='/user-order' element={token ? <UserOrders /> : <Navigate to='/' />} />
         </Routes>
       </Layout>
     </CartProvider>

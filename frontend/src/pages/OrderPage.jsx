@@ -8,7 +8,7 @@ const PlaceOrder = ({ user }) => {
   const { getTotalPrice, getCartItems, clearCart } = useCart();
   const [form, setForm] = useState({
     fullName: '',
-    email: `${user?.email}`,
+    email: '',
     phone: '',
     address: '',
     city: '',
@@ -23,12 +23,6 @@ const PlaceOrder = ({ user }) => {
 
   const handleSubmit = async (e) => {
   e.preventDefault();
-  
-  if (!user) {
-    navigate('/login');
-    return;
-  }
-
   setLoading(true);
 
   const orderData = {
@@ -46,8 +40,13 @@ const PlaceOrder = ({ user }) => {
     paymentMethod: form.paymentMethod,
   };
 
+  if (!user) {
+    navigate('/login');
+    return;
+  }
+
   try {
-    // Axios automatically sends data as JSON and includes the token from interceptor
+    // Check what your api service expects - axios style:
     const response = await api.post('/orders/place', orderData);
     
     if (response.data.success) {
@@ -83,12 +82,11 @@ const PlaceOrder = ({ user }) => {
             />
             <input
               name='email'
-              value={form.email}
+              value={user?.email}
               onChange={handleChange}
               placeholder='Email'
               className='w-full p-3 border rounded'
               required
-              disabled
             />
             <input
               name='phone'
